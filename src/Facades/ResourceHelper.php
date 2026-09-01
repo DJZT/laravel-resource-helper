@@ -7,7 +7,7 @@ namespace Djzt\ResourceHelper\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Те же хелперы вне ресурсов — в контроллерах, экспортах, нотификациях.
+ * The same helpers outside resources — in controllers, exports, notifications.
  *
  * @method static string|null date(mixed $value, ?string $format = null, ?string $timezone = null)
  * @method static string|null dateTime(mixed $value, ?string $format = null, ?string $timezone = null)

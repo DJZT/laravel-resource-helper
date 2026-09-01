@@ -8,8 +8,8 @@ use Djzt\ResourceHelper\Concerns\HasResourceHelpers;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
- * Базовая коллекция ресурсов с подключёнными хелперами —
- * полезно для агрегатов в meta (суммы, диапазоны дат).
+ * A base resource collection with the helpers wired in — useful for the
+ * aggregates you put in meta, such as totals and date ranges.
  */
 abstract class HelperResourceCollection extends ResourceCollection
 {

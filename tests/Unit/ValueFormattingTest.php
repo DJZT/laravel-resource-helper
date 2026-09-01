@@ -126,13 +126,14 @@ class ValueFormattingTest extends TestCase
     #[Test]
     public function it_picks_the_translation_for_the_current_locale(): void
     {
-        $value = ['en' => 'Hello', 'ru' => 'Привет'];
+        $value = ['en' => 'Hello', 'uk' => 'Привіт'];
 
         $this->assertSame('Hello', $this->formatter()->translate($value));
-        $this->assertSame('Привет', $this->formatter()->translate($value, 'ru'));
+        $this->assertSame('Привіт', $this->formatter()->translate($value, 'uk'));
         $this->assertSame('Hello', $this->formatter()->translate(json_encode($value)));
 
-        // Нет ни запрошенной, ни fallback-локали — берём первый непустой вариант.
+        // Neither the requested nor the fallback locale is present, so the first
+        // non-empty variant wins.
         $this->assertSame('Bonjour', $this->formatter()->translate(['de' => '', 'fr' => 'Bonjour'], 'es'));
         $this->assertNull($this->formatter()->translate(null));
     }

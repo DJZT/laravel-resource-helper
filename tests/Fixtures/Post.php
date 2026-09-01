@@ -15,7 +15,7 @@ class Post extends Model
     protected $casts = [
         'published_at' => 'datetime',
         'status'       => Status::class,
-        'is_featured'  => 'string', // как будто прилетело из БД строкой
+        'is_featured'  => 'string', // as if it arrived from the database as a string
     ];
 
     public function author(): BelongsTo

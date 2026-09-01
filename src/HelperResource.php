@@ -8,10 +8,10 @@ use Djzt\ResourceHelper\Concerns\HasResourceHelpers;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Базовый ресурс с подключёнными хелперами.
+ * A base resource with the helpers already wired in.
  *
- * Наследуйтесь от него вместо JsonResource — либо подключайте трейт
- * \Djzt\ResourceHelper\Concerns\HasResourceHelpers в существующий ресурс.
+ * Extend this instead of JsonResource, or pull the
+ * \Djzt\ResourceHelper\Concerns\HasResourceHelpers trait into an existing one.
  */
 abstract class HelperResource extends JsonResource
 {

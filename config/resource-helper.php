@@ -9,19 +9,19 @@ return [
     | Date formats
     |--------------------------------------------------------------------------
     |
-    | Формат, в котором даты отдаются в API. Ключи date / datetime / time
-    | используются методами $this->date(), $this->dateTime(), $this->time()
-    | по умолчанию.
+    | The format dates are rendered with across your API. The date / datetime /
+    | time keys are the defaults used by $this->date(), $this->dateTime()
+    | and $this->time().
     |
-    | Любой другой ключ этого массива — именованный пресет, который можно
-    | передать первым аргументом формата:
+    | Every other key in this array is a named preset you can pass as the
+    | format argument:
     |
     |     $this->date($this->created_at)            // 2026-09-01
     |     $this->date($this->created_at, 'human')   // 1 Sep 2026
-    |     $this->date($this->created_at, 'd/m/Y')   // 01/09/2026  (сырой формат)
+    |     $this->date($this->created_at, 'd/m/Y')   // 01/09/2026  (raw format)
     |
-    | Если строка не найдена среди пресетов — она трактуется как обычный
-    | PHP date() формат.
+    | A string that is not one of the presets is used verbatim as a PHP
+    | date() format.
     |
     */
 
@@ -30,7 +30,7 @@ return [
         'datetime'       => 'Y-m-d H:i:s',
         'time'           => 'H:i',
 
-        // Именованные пресеты
+        // Named presets
         'iso'            => \DateTimeInterface::ATOM,
         'rfc'            => \DateTimeInterface::RFC7231,
         'human'          => 'j M Y',
@@ -44,16 +44,15 @@ return [
     | Timezone
     |--------------------------------------------------------------------------
     |
-    | Часовой пояс, в который переводятся даты перед форматированием.
-    | null — оставить как есть (то есть app.timezone, в котором Eloquent
-    | отдаёт Carbon-атрибуты).
+    | The timezone dates are converted into before they are formatted.
+    | null leaves them as they are, i.e. in app.timezone, which is what
+    | Eloquent hands you for Carbon attributes.
     |
-    | Строка ('Europe/Moscow', 'UTC') — жёсткий пояс для всего API.
+    | A string ('Europe/Kyiv', 'UTC') fixes one timezone for the whole API.
     |
-    | Также можно указать callable, чтобы брать пояс из текущего
-    | пользователя, например:
+    | A closure lets you resolve it per request, e.g. from the current user:
     |
-    |     'timezone' => fn () => optional(auth()->user())->timezone,
+    |     'timezone' => fn () => auth()->user()?->timezone,
     |
     */
 
@@ -64,8 +63,8 @@ return [
     | Locale for humanized output
     |--------------------------------------------------------------------------
     |
-    | Локаль для diffForHumans() и локализованных форматов Carbon.
-    | null — текущая локаль приложения (app()->getLocale()).
+    | The locale used by diffForHumans() and Carbon's localized formats.
+    | null falls back to the application locale, app()->getLocale().
     |
     */
 
@@ -76,8 +75,11 @@ return [
     | Null value
     |--------------------------------------------------------------------------
     |
-    | Что отдавать вместо отформатированного значения, если исходное значение
-    | пустое (null / ''). Обычно null, но некоторым фронтам удобнее ''.
+    | What to return instead of a formatted value when the input is empty
+    | (null or ''). Usually null, though some frontends prefer ''.
+    |
+    | This applies to helpers that return a string. Helpers returning a number
+    | or a boolean always return null, so their types stay honest.
     |
     */
 
@@ -88,8 +90,8 @@ return [
     | Strict mode
     |--------------------------------------------------------------------------
     |
-    | false — непарсящееся значение даты молча превращается в null_value.
-    | true  — бросается InvalidArgumentException (удобно ловить в тестах).
+    | false — a value that cannot be parsed silently becomes null_value.
+    | true  — an InvalidArgumentException is thrown, which is handy in tests.
     |
     */
 
@@ -100,10 +102,10 @@ return [
     | Date array
     |--------------------------------------------------------------------------
     |
-    | Набор ключей, которые возвращает $this->dateArray(). Значение каждого
-    | ключа — пресет или сырой формат; специальные значения:
-    |   'timestamp' — unix-время (int)
-    |   'human'     — diffForHumans() («3 часа назад»)
+    | The keys returned by $this->dateArray(). Each value is a preset or a raw
+    | format; two values are special:
+    |   'timestamp' — unix time as an int
+    |   'human'     — diffForHumans(), e.g. "3 hours ago"
     |
     */
 
@@ -119,11 +121,11 @@ return [
     | Money
     |--------------------------------------------------------------------------
     |
-    | output:         string | float | array
-    | decimals:       знаков после запятой
-    | minor_units:    true, если в БД хранятся копейки/центы (int)
-    | currency:       валюта по умолчанию
-    | decimal_point / thousands_separator: разделители для output = string
+    | output:        string | float | array
+    | decimals:      digits after the decimal point
+    | minor_units:   true when the database stores cents as an integer
+    | currency:      the default currency
+    | decimal_point / thousands_separator: separators used when output is string
     |
     */
 
@@ -153,8 +155,8 @@ return [
     | Files
     |--------------------------------------------------------------------------
     |
-    | Диск, с которого $this->url() строит абсолютные ссылки на файлы.
-    | null — диск по умолчанию из config/filesystems.php.
+    | The disk $this->url() builds absolute file URLs from.
+    | null uses the default disk from config/filesystems.php.
     |
     */
 
@@ -167,8 +169,8 @@ return [
     | Mask
     |--------------------------------------------------------------------------
     |
-    | Параметры по умолчанию для $this->mask() — скрытие части строки
-    | (телефоны, карты, e-mail) в публичной выдаче.
+    | Defaults for $this->mask(), which hides part of a string — phone numbers,
+    | card numbers, e-mails — in public output.
     |
     */
 

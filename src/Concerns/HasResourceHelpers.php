@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Gate;
 use LogicException;
 
 /**
- * Хелперы для JsonResource / ResourceCollection.
+ * Helpers for JsonResource / ResourceCollection.
  *
- * Подключается либо напрямую в свой ресурс, либо через базовый класс
+ * Use it either directly in your own resource, or through the base class
  * \Djzt\ResourceHelper\HelperResource.
  *
  * @mixin \Illuminate\Http\Resources\Json\JsonResource
@@ -21,12 +21,12 @@ trait HasResourceHelpers
 {
     /*
     |--------------------------------------------------------------------------
-    | Даты
+    | Dates
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Дата в формате из config('resource-helper.formats.date').
+     * A date in the format from config('resource-helper.formats.date').
      *
      *     $this->date($this->created_at)           // 2026-09-01
      *     $this->date($this->created_at, 'human')  // 1 Sep 2026
@@ -40,7 +40,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Дата и время в формате из config('resource-helper.formats.datetime').
+     * A date and time in the format from config('resource-helper.formats.datetime').
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -50,7 +50,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Время в формате из config('resource-helper.formats.time').
+     * A time in the format from config('resource-helper.formats.time').
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -60,7 +60,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Дата в ISO-8601.
+     * A date in ISO-8601.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -70,7 +70,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Unix-время.
+     * Unix time.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -80,7 +80,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * «3 часа назад».
+     * "3 hours ago".
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -90,7 +90,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Дата во всех представлениях сразу (набор ключей — в конфиге date_array).
+     * A date in every representation at once (keys come from date_array in the config).
      *
      * @param  \DateTimeInterface|string|int|null  $value
      * @return array<string, string|int|null>|null
@@ -101,7 +101,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Несколько дат разом — результат подмешивается через spread:
+     * Several dates at once; spread the result into your array:
      *
      *     return [
      *         'id' => $this->id,
@@ -118,12 +118,12 @@ trait HasResourceHelpers
 
     /*
     |--------------------------------------------------------------------------
-    | Числа
+    | Numbers
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Сумма денег (см. секцию money в конфиге).
+     * A monetary amount (see the money section of the config).
      *
      * @return string|float|array<string, mixed>|null
      */
@@ -133,7 +133,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Число с фиксированным количеством знаков после запятой.
+     * A number with a fixed number of decimals.
      */
     protected function number(mixed $value, ?int $decimals = null): ?float
     {
@@ -141,7 +141,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Алиас number().
+     * Alias of number().
      */
     protected function float(mixed $value, ?int $decimals = null): ?float
     {
@@ -149,7 +149,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Целое число.
+     * An integer.
      */
     protected function integer(mixed $value): ?int
     {
@@ -157,7 +157,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Алиас integer().
+     * Alias of integer().
      */
     protected function int(mixed $value): ?int
     {
@@ -165,7 +165,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Настоящий boolean вместо 0 / 1 / "1".
+     * A real boolean instead of 0 / 1 / "1".
      */
     protected function boolean(mixed $value): ?bool
     {
@@ -173,7 +173,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Алиас boolean().
+     * Alias of boolean().
      */
     protected function bool(mixed $value): ?bool
     {
@@ -181,7 +181,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Проценты: 0.1234 -> 12.34.
+     * Percentages: 0.1234 -> 12.34.
      */
     protected function percent(mixed $value, ?int $decimals = null, bool $fromFraction = true): ?float
     {
@@ -189,7 +189,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Человекочитаемый размер файла: 1536 -> "1.5 KB".
+     * A human-readable file size: 1536 -> "1.5 KB".
      */
     protected function bytes(mixed $value, int $precision = 1): ?string
     {
@@ -198,12 +198,12 @@ trait HasResourceHelpers
 
     /*
     |--------------------------------------------------------------------------
-    | Строки, enum-ы, файлы
+    | Strings, enums, files
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Строка с trim и, опционально, обрезкой длины.
+     * A trimmed string, optionally truncated to a length.
      */
     protected function string(mixed $value, ?int $limit = null, string $end = '...'): ?string
     {
@@ -211,7 +211,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Алиас string().
+     * Alias of string().
      */
     protected function str(mixed $value, ?int $limit = null, string $end = '...'): ?string
     {
@@ -219,7 +219,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Значение enum-а (BackedEnum -> value, обычный enum -> name).
+     * An enum's value (BackedEnum -> value, a pure enum -> name).
      */
     protected function enum(mixed $value): mixed
     {
@@ -227,7 +227,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Абсолютная ссылка на файл в сторадже.
+     * An absolute URL for a file on a disk.
      */
     protected function url(mixed $path, ?string $disk = null): ?string
     {
@@ -235,7 +235,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Значение переводимого json-поля для текущей локали.
+     * The value of a translatable JSON field for the current locale.
      */
     protected function translate(mixed $value, ?string $locale = null): ?string
     {
@@ -243,7 +243,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Скрыть часть строки: "79001234567" -> "*******4567".
+     * Hide part of a string: "380501234567" -> "********4567".
      */
     protected function mask(mixed $value, ?int $keepStart = null, ?int $keepEnd = null, ?string $character = null): ?string
     {
@@ -252,13 +252,13 @@ trait HasResourceHelpers
 
     /*
     |--------------------------------------------------------------------------
-    | Условные атрибуты
+    | Conditional attributes
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Вложенный ресурс, но только если связь уже загружена — иначе N+1.
-     * Сам определяет, коллекция это или одна модель.
+     * A nested resource, but only when the relation is already loaded —
+     * otherwise you get N+1. Collection vs. single model is detected for you.
      *
      *     'author'  => $this->whenLoadedResource('author', UserResource::class),
      *     'comments' => $this->whenLoadedResource('comments', CommentResource::class),
@@ -281,7 +281,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Атрибут только для тех, кому разрешает политика.
+     * An attribute only for those the policy allows.
      *
      *     'email' => $this->whenCan('viewEmail', $this->email),
      */
@@ -295,7 +295,7 @@ trait HasResourceHelpers
     }
 
     /**
-     * Атрибут только для аутентифицированных запросов.
+     * An attribute only for authenticated requests.
      */
     protected function whenAuthenticated(mixed $value, mixed $default = null, ?string $guard = null): mixed
     {
@@ -308,18 +308,18 @@ trait HasResourceHelpers
 
     /*
     |--------------------------------------------------------------------------
-    | Доступ к форматтеру
+    | Access to the formatter
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Экземпляр форматтера — на случай, если нужен метод, не проксированный сюда.
+     * The formatter instance, for a method that is not proxied here.
      */
     protected function formatter(): Formatter
     {
         if (! app()->bound(Formatter::class)) {
             throw new LogicException(
-                'Djzt\ResourceHelper\ResourceHelperServiceProvider не зарегистрирован.'
+                'Djzt\ResourceHelper\ResourceHelperServiceProvider is not registered.'
             );
         }
 

@@ -17,18 +17,18 @@ use Throwable;
 use UnitEnum;
 
 /**
- * Форматирование значений для API-ответа.
+ * Formats values for an API response.
  *
- * Вся логика вынесена сюда, чтобы её можно было использовать и вне ресурсов
- * (в контроллерах, джобах, экспортах) и покрывать тестами без Laravel-ресурса.
+ * All of the logic lives here so it can be reused outside resources — in
+ * controllers, jobs, exports — and tested without a Laravel resource.
  *
- * Пустое значение (null / '') превращается в config('resource-helper.null_value')
- * у методов, отдающих строку, и в null — у методов, отдающих число или boolean.
+ * An empty value (null / '') becomes config('resource-helper.null_value') in
+ * helpers that return a string, and null in those returning a number or a bool.
  */
 class Formatter
 {
     /**
-     * Форматы на случай, если конфиг не опубликован или ключ из него удалён.
+     * Fallbacks for when the config is not published, or a key was removed.
      *
      * @var array<string, string>
      */
@@ -44,15 +44,15 @@ class Formatter
 
     /*
     |--------------------------------------------------------------------------
-    | Даты
+    | Dates
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Дата в формате из конфига (formats.date).
+     * A date in the configured format (formats.date).
      *
      * @param  \DateTimeInterface|string|int|null  $value
-     * @param  string|null  $format  пресет из конфига либо сырой PHP-формат
+     * @param  string|null  $format  a preset from the config, or a raw PHP format
      */
     public function date(mixed $value, ?string $format = null, ?string $timezone = null): ?string
     {
@@ -60,7 +60,7 @@ class Formatter
     }
 
     /**
-     * Дата и время в формате из конфига (formats.datetime).
+     * A date and time in the configured format (formats.datetime).
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -70,7 +70,7 @@ class Formatter
     }
 
     /**
-     * Время в формате из конфига (formats.time).
+     * A time in the configured format (formats.time).
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -80,7 +80,7 @@ class Formatter
     }
 
     /**
-     * ISO-8601 — универсальный формат для фронта: new Date(...) его понимает.
+     * ISO-8601 — the portable choice for a frontend: new Date(...) parses it.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -90,7 +90,7 @@ class Formatter
     }
 
     /**
-     * Unix-время.
+     * Unix time.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -100,7 +100,7 @@ class Formatter
     }
 
     /**
-     * «3 часа назад» — с учётом локали из конфига.
+     * "3 hours ago", in the locale from the config.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -120,9 +120,9 @@ class Formatter
     }
 
     /**
-     * Одна дата во всех представлениях сразу; набор ключей задаётся в конфиге
-     * (date_array). Удобно, когда фронту нужно и машиночитаемое значение,
-     * и готовая к показу строка.
+     * One date in every representation at once; the set of keys comes from the
+     * config (date_array). Useful when the frontend needs both a machine-readable
+     * value and a string that is ready to display.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      * @return array<string, string|int|null>|null
@@ -149,7 +149,7 @@ class Formatter
     }
 
     /**
-     * Отформатировать сразу несколько дат.
+     * Format several dates in one call.
      *
      *     $this->dates([
      *         'created_at' => $this->created_at,
@@ -174,13 +174,14 @@ class Formatter
 
     /*
     |--------------------------------------------------------------------------
-    | Числа и деньги
+    | Numbers and money
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Сумма денег. Вид результата (строка / float / массив), количество знаков
-     * и хранение в копейках настраиваются в конфиге, секция money.
+     * A monetary amount. The shape of the result (string / float / array), the
+     * number of decimals and whether cents are stored are set in the money
+     * section of the config.
      *
      * @return string|float|array<string, mixed>|null
      */
@@ -191,7 +192,7 @@ class Formatter
         }
 
         if (! is_numeric($value)) {
-            $this->invalid("Значение [{$this->describe($value)}] нельзя привести к сумме.");
+            $this->invalid("The value [{$this->describe($value)}] cannot be read as an amount.");
 
             return $this->nullString();
         }
@@ -224,8 +225,8 @@ class Formatter
     }
 
     /**
-     * Число с фиксированным количеством знаков: БД отдаёт decimal строкой
-     * ("10.00"), и в JSON это выглядит как строка вместо числа.
+     * A number with a fixed number of decimals: the database hands back a
+     * decimal as the string "10.00", which then shows up in JSON as a string.
      */
     public function number(mixed $value, ?int $decimals = null): ?float
     {
@@ -234,7 +235,7 @@ class Formatter
         }
 
         if (! is_numeric($value)) {
-            $this->invalid("Значение [{$this->describe($value)}] нельзя привести к числу.");
+            $this->invalid("The value [{$this->describe($value)}] cannot be read as a number.");
 
             return null;
         }
@@ -243,7 +244,7 @@ class Formatter
     }
 
     /**
-     * Целое число: BIGINT и COUNT(*) приходят из БД строкой.
+     * An integer: BIGINT and COUNT(*) also arrive from the database as strings.
      */
     public function integer(mixed $value): ?int
     {
@@ -252,7 +253,7 @@ class Formatter
         }
 
         if (! is_numeric($value)) {
-            $this->invalid("Значение [{$this->describe($value)}] нельзя привести к целому.");
+            $this->invalid("The value [{$this->describe($value)}] cannot be read as an integer.");
 
             return null;
         }
@@ -261,7 +262,7 @@ class Formatter
     }
 
     /**
-     * Настоящий boolean вместо 0 / 1 / "1" / "true".
+     * A real boolean instead of 0 / 1 / "1" / "true".
      */
     public function boolean(mixed $value): ?bool
     {
@@ -273,7 +274,8 @@ class Formatter
     }
 
     /**
-     * Проценты: 0.1234 -> 12.34. Если в БД уже проценты — $fromFraction = false.
+     * Percentages: 0.1234 -> 12.34. Pass $fromFraction = false when the column
+     * already holds percents.
      */
     public function percent(mixed $value, ?int $decimals = null, bool $fromFraction = true): ?float
     {
@@ -290,7 +292,7 @@ class Formatter
     }
 
     /**
-     * Человекочитаемый размер файла: 1536 -> "1.5 KB".
+     * A human-readable file size: 1536 -> "1.5 KB".
      */
     public function bytes(mixed $value, int $precision = 1): ?string
     {
@@ -309,12 +311,12 @@ class Formatter
 
     /*
     |--------------------------------------------------------------------------
-    | Строки, enum-ы, файлы
+    | Strings, enums, files
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Строка с обрезкой пробелов и, опционально, длины.
+     * A trimmed string, optionally truncated to a length.
      */
     public function string(mixed $value, ?int $limit = null, string $end = '...'): ?string
     {
@@ -323,7 +325,7 @@ class Formatter
         }
 
         if (is_array($value) || (is_object($value) && ! method_exists($value, '__toString'))) {
-            $this->invalid("Значение [{$this->describe($value)}] нельзя привести к строке.");
+            $this->invalid("The value [{$this->describe($value)}] cannot be read as a string.");
 
             return $this->nullString();
         }
@@ -334,8 +336,8 @@ class Formatter
     }
 
     /**
-     * Значение enum-а: BackedEnum -> ->value, обычный enum -> ->name.
-     * Массив или коллекция enum-ов маппится поэлементно.
+     * An enum's value: BackedEnum -> ->value, a pure enum -> ->name.
+     * An array or collection of enums is mapped element-wise.
      */
     public function enum(mixed $value): mixed
     {
@@ -365,8 +367,8 @@ class Formatter
     }
 
     /**
-     * Абсолютная ссылка на файл в сторадже. Уже абсолютный путь
-     * (http / https / протокол-относительный / data:) возвращается как есть.
+     * An absolute URL for a file on a disk. A path that is already absolute
+     * (http / https / protocol-relative / data:) is returned untouched.
      */
     public function url(mixed $path, ?string $disk = null): ?string
     {
@@ -387,9 +389,9 @@ class Formatter
     }
 
     /**
-     * Значение переводимого поля — json-колонки вида {"en": "...", "ru": "..."}.
-     * Если перевода на текущую локаль нет, берётся fallback-локаль,
-     * затем первый непустой вариант.
+     * The value of a translatable field — a JSON column like
+     * {"en": "...", "uk": "..."}. When there is no translation for the current
+     * locale, the fallback locale is used, then the first non-empty variant.
      */
     public function translate(mixed $value, ?string $locale = null): ?string
     {
@@ -422,8 +424,8 @@ class Formatter
     }
 
     /**
-     * Скрыть часть строки: "79001234567" -> "*******4567".
-     * У e-mail маскируется только локальная часть.
+     * Hide part of a string: "380501234567" -> "********4567".
+     * For an e-mail only the local part is masked.
      */
     public function mask(mixed $value, ?int $keepStart = null, ?int $keepEnd = null, ?string $character = null): ?string
     {
@@ -456,13 +458,13 @@ class Formatter
 
     /*
     |--------------------------------------------------------------------------
-    | Внутреннее
+    | Internals
     |--------------------------------------------------------------------------
     */
 
     /**
-     * Привести произвольное значение к Carbon. Строка из одних цифр
-     * трактуется как unix-время.
+     * Coerce an arbitrary value into Carbon. A digits-only string is read as
+     * unix time.
      *
      * @param  \DateTimeInterface|string|int|null  $value
      */
@@ -473,7 +475,7 @@ class Formatter
         }
 
         if ($value instanceof DateTimeInterface) {
-            // instance() создаёт копию, поэтому исходный атрибут модели не мутируем.
+            // instance() makes a copy, so the model's own attribute is never mutated.
             $date = Carbon::instance($value);
         } elseif (is_int($value) || (is_string($value) && ctype_digit($value))) {
             $date = Carbon::createFromTimestamp((int) $value);
@@ -481,12 +483,12 @@ class Formatter
             try {
                 $date = Carbon::parse($value);
             } catch (Throwable $e) {
-                $this->invalid("Значение [{$value}] не удалось разобрать как дату.", $e);
+                $this->invalid("The value [{$value}] could not be parsed as a date.", $e);
 
                 return null;
             }
         } else {
-            $this->invalid("Значение [{$this->describe($value)}] не является датой.");
+            $this->invalid("The value [{$this->describe($value)}] is not a date.");
 
             return null;
         }
@@ -511,8 +513,8 @@ class Formatter
     }
 
     /**
-     * Формат может быть: null (взять formats.{$fallbackKey}), именем пресета
-     * из конфига либо сырым PHP-форматом.
+     * The format may be null (use formats.{$fallbackKey}), the name of a preset
+     * from the config, or a raw PHP format.
      */
     protected function resolveFormat(?string $format, string $fallbackKey): string
     {
@@ -526,7 +528,7 @@ class Formatter
                 : (self::FALLBACK_FORMATS[$fallbackKey] ?? 'Y-m-d');
         }
 
-        // Именованный пресет из конфига, иначе — сырой PHP-формат как есть.
+        // A named preset from the config, otherwise the raw PHP format as given.
         return isset($formats[$format]) && is_string($formats[$format])
             ? $formats[$format]
             : $format;
@@ -538,7 +540,7 @@ class Formatter
     }
 
     /**
-     * Заменитель пустого значения для методов, отдающих строку.
+     * The stand-in for an empty value, for helpers that return a string.
      */
     protected function nullString(): ?string
     {
@@ -571,8 +573,8 @@ class Formatter
     }
 
     /**
-     * В strict-режиме бросает исключение, иначе молча пропускает —
-     * вызывающий метод сам вернёт «пустое» значение.
+     * Throws in strict mode; otherwise it stays quiet and the calling method
+     * returns the empty value itself.
      */
     protected function invalid(string $message, ?Throwable $previous = null): void
     {

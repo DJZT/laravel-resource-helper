@@ -9,9 +9,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    # laravel/framework замещает (replace) пакеты illuminate/*, поэтому
-    # в матрице пинится именно он вместе с парной версией testbench,
-    # а не illuminate/support.
+    # laravel/framework replaces the illuminate/* packages, so the matrix pins
+    # it together with the matching testbench version rather than
+    # illuminate/support.
     strategy:
       fail-fast: false
       matrix:
