@@ -1,6 +1,6 @@
 # Laravel Resource Helper
 
-**English** · **[Українська](README.uk.md)** · **[Русский](README.ru.md)**
+**English** · **[Українська](README.uk.md)**
 
 Helper methods for Laravel API Resources. The main one is a single, config-driven
 date format across your whole API, plus a set of methods for everything else you
@@ -32,7 +32,7 @@ The service provider is auto-discovered. Publish the config with:
 php artisan vendor:publish --tag=resource-helper-config
 ```
 
-Requires PHP 8.1+ and Laravel 10, 11 or 12.
+Requires PHP 8.2+ and Laravel 12 or 13.
 
 ## Setup
 

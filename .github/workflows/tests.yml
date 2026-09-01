@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches: [master, main]
+    branches: [master]
   pull_request:
 
 jobs:
@@ -10,22 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     # laravel/framework замещает (replace) пакеты illuminate/*, поэтому
-    # пинить в матрице нужно именно его, а не illuminate/support — иначе
-    # composer не может поставить одновременно отдельный illuminate/support
-    # и заменяющий его laravel/framework.
+    # в матрице пинится именно он вместе с парной версией testbench,
+    # а не illuminate/support.
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { php: '8.1', laravel: '10.*', testbench: '8.*' }
-          - { php: '8.2', laravel: '10.*', testbench: '8.*' }
-          - { php: '8.3', laravel: '10.*', testbench: '8.*' }
-          - { php: '8.2', laravel: '11.*', testbench: '9.*' }
-          - { php: '8.3', laravel: '11.*', testbench: '9.*' }
-          - { php: '8.4', laravel: '11.*', testbench: '9.*' }
-          - { php: '8.2', laravel: '12.*', testbench: '10.*' }
-          - { php: '8.3', laravel: '12.*', testbench: '10.*' }
-          - { php: '8.4', laravel: '12.*', testbench: '10.*' }
+          - php: '8.2'
+            laravel: '12.*'
+            testbench: '10.*'
+          - php: '8.3'
+            laravel: '12.*'
+            testbench: '10.*'
+          - php: '8.3'
+            laravel: '13.*'
+            testbench: '11.*'
+          - php: '8.4'
+            laravel: '12.*'
+            testbench: '10.*'
+          - php: '8.4'
+            laravel: '13.*'
+            testbench: '11.*'
 
     name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }}
 
@@ -46,7 +51,7 @@ jobs:
           composer require --dev --no-interaction --no-update \
             "laravel/framework:${{ matrix.laravel }}" \
             "orchestra/testbench:${{ matrix.testbench }}"
-          composer update --prefer-dist --no-interaction
+          composer update --prefer-dist --no-interaction --no-progress
 
       - name: Run tests
         run: vendor/bin/phpunit

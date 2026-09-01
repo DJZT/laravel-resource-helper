@@ -1,6 +1,6 @@
 # Laravel Resource Helper
 
-**[English](README.md)** · **Українська** · **[Русский](README.ru.md)**
+**[English](README.md)** · **Українська**
 
 Хелпери для Laravel API Resources. Головне — єдиний формат дат у всьому API,
 який задається однією настройкою в конфізі, плюс набір методів на решту того,
@@ -32,7 +32,7 @@ composer require djzt/laravel-resource-helper
 php artisan vendor:publish --tag=resource-helper-config
 ```
 
-Вимоги: PHP 8.1+, Laravel 10 / 11 / 12.
+Вимоги: PHP 8.2+, Laravel 12 / 13.
 
 ## Підключення
 
