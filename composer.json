@@ -1,0 +1,55 @@
+{
+    "name": "djzt/laravel-resource-helper",
+    "description": "Helper methods for Laravel API Resources: configurable date formatting, money, enums, files, conditional attributes.",
+    "keywords": [
+        "laravel",
+        "api",
+        "resource",
+        "json-resource",
+        "helper",
+        "date",
+        "formatting"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DJZT"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/contracts": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "nesbot/carbon": "^2.62|^3.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Djzt\\ResourceHelper\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Djzt\\ResourceHelper\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Djzt\\ResourceHelper\\ResourceHelperServiceProvider"
+            ],
+            "aliases": {
+                "ResourceHelper": "Djzt\\ResourceHelper\\Facades\\ResourceHelper"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
